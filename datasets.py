@@ -9,7 +9,7 @@ import zipfile
 import numpy as np
 import pandas as pd
 from sklearn import datasets
-from memory import Memory
+from sklearn.externals.joblib.memory import Memory
 
 if sys.version_info[0] >= 3:
     from urllib.request import urlretrieve  # pylint: disable=import-error,no-name-in-module
