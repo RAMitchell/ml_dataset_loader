@@ -5,6 +5,7 @@ import shutil
 import sys
 import tarfile
 import zipfile
+from functools import wraps
 
 import numpy as np
 import pandas as pd
@@ -14,18 +15,42 @@ from sklearn.externals.joblib import Memory
 if sys.version_info[0] >= 3:
     from urllib.request import urlretrieve  # pylint: disable=import-error,no-name-in-module
 else:
-    from urllib import urlretrieve  # pylint: disable=import-error
+    from urllib import urlretrieve  # pylint: disable=import-error,no-name-in-module
 
 mem = Memory("./mycache")
+
+
+def __cache(func):
+    """
+    Caching function decorator that preserves docstrings
+    :param func:
+    :return:
+    """
+
+    @mem.cache()
+    def cache_wrapper(*args, **kwargs):
+        """
+        Caching wrapper function
+        """
+        return func(*args, **kwargs)
+
+    return wraps(func)(cache_wrapper)
+
 
 get_higgs_url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/00280/HIGGS.csv.gz'  # pylint: disable=line-too-long
 
 
-@mem.cache
+@__cache
 def get_higgs(num_rows=None):
     """
+    Higgs dataset from UCI machine learning repository (
+    https://archive.ics.uci.edu/ml/datasets/HIGGS).
+
+    - Dimensions: 11M rows, 28 columns.
+    - Task: Binary classification
+
     :param num_rows:
-    :return:
+    :return: X, y
     """
     filename = 'HIGGS.csv'
     if not os.path.isfile(filename):
@@ -43,12 +68,19 @@ def get_higgs(num_rows=None):
     return X, y
 
 
-@mem.cache
+@__cache
 def get_cover_type(num_rows=None):
     """
+    Cover type dataset from UCI machine learning repository (
+    https://archive.ics.uci.edu/ml/datasets/covertype).
+
+    y contains 7 unique class labels from 1 to 7 inclusive.
+
+    - Dimensions: 581012 rows, 54 columns.
+    - Task: Multiclass classification
 
     :param num_rows:
-    :return:
+    :return: X, y
     """
     data = datasets.fetch_covtype()
     X = data.data
@@ -60,12 +92,17 @@ def get_cover_type(num_rows=None):
     return X, y
 
 
-@mem.cache
+@__cache
 def get_synthetic_regression(num_rows=None):
     """
+    Synthetic regression generator from sklearn (
+    http://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_regression.html).
+
+    - Dimensions: 10000000 rows, 100 columns.
+    - Task: Regression
 
     :param num_rows:
-    :return:
+    :return: X, y
     """
     if num_rows is None:
         num_rows = 10000000
@@ -75,12 +112,17 @@ def get_synthetic_regression(num_rows=None):
 get_year_url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/00203/YearPredictionMSD.txt.zip'  # pylint: disable=line-too-long
 
 
-@mem.cache
+@__cache
 def get_year(num_rows=None):
     """
+    YearPredictionMSD dataset from UCI repository (
+    https://archive.ics.uci.edu/ml/datasets/yearpredictionmsd)
+
+    - Dimensions: 515345 rows, 90 columns.
+    - Task: Regression
 
     :param num_rows:
-    :return:
+    :return: X,y
     """
     filename = 'YearPredictionMSD.txt'
     if not os.path.isfile(filename):
@@ -102,11 +144,19 @@ def get_year(num_rows=None):
 get_url_url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/url/url_svmlight.tar.gz'  # pylint: disable=line-too-long
 
 
-@mem.cache
+@__cache
 def get_url(num_rows=None):
     """
+    URL reputation dataset from UCI repository (
+    https://archive.ics.uci.edu/ml/datasets/URL+Reputation)
+
+    Extremely sparse classification dataset. X is returned as a scipy sparse matrix.
+
+    - Dimensions: 2396130 rows, 3231961 columns.
+    - Task: Classification
+
     :param num_rows:
-    :return:
+    :return: X,y
     """
     from scipy.sparse import vstack
     filename = 'url_svmlight.tar.gz'
