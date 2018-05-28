@@ -5,12 +5,11 @@ import shutil
 import sys
 import tarfile
 import zipfile
-from functools import wraps
 
 import numpy as np
 import pandas as pd
 from sklearn import datasets
-from sklearn.externals.joblib import Memory
+from memory import Memory
 
 if sys.version_info[0] >= 3:
     from urllib.request import urlretrieve  # pylint: disable=import-error,no-name-in-module
@@ -20,27 +19,10 @@ else:
 mem = Memory("./mycache")
 
 
-def __cache(func):
-    """
-    Caching function decorator that preserves docstrings
-    :param func:
-    :return:
-    """
-
-    @mem.cache()
-    def cache_wrapper(*args, **kwargs):
-        """
-        Caching wrapper function
-        """
-        return func(*args, **kwargs)
-
-    return wraps(func)(cache_wrapper)
-
-
 get_higgs_url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/00280/HIGGS.csv.gz'  # pylint: disable=line-too-long
 
 
-@__cache
+@mem.cache
 def get_higgs(num_rows=None):
     """
     Higgs dataset from UCI machine learning repository (
@@ -68,7 +50,7 @@ def get_higgs(num_rows=None):
     return X, y
 
 
-@__cache
+@mem.cache
 def get_cover_type(num_rows=None):
     """
     Cover type dataset from UCI machine learning repository (
@@ -92,7 +74,7 @@ def get_cover_type(num_rows=None):
     return X, y
 
 
-@__cache
+@mem.cache
 def get_synthetic_regression(num_rows=None):
     """
     Synthetic regression generator from sklearn (
@@ -112,7 +94,7 @@ def get_synthetic_regression(num_rows=None):
 get_year_url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/00203/YearPredictionMSD.txt.zip'  # pylint: disable=line-too-long
 
 
-@__cache
+@mem.cache
 def get_year(num_rows=None):
     """
     YearPredictionMSD dataset from UCI repository (
@@ -144,7 +126,7 @@ def get_year(num_rows=None):
 get_url_url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/url/url_svmlight.tar.gz'  # pylint: disable=line-too-long
 
 
-@__cache
+@mem.cache
 def get_url(num_rows=None):
     """
     URL reputation dataset from UCI repository (
