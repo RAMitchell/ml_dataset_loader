@@ -1,0 +1,11 @@
+language: python
+python:
+  - "2.7"
+  - "3.4"
+cache: pip
+install:
+  - pip install pylint
+  - pip install -r requirements.txt
+script:
+  - pylint datasets.py --disable=invalid-name
+  - py.test test_datasets.py
