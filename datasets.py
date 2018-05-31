@@ -5,16 +5,16 @@ import shutil
 import sys
 import tarfile
 import zipfile
+
 import numpy as np
 import pandas as pd
 from sklearn import datasets
 from sklearn.externals.joblib.memory import Memory
+
 if sys.version_info[0] >= 3:
     from urllib.request import urlretrieve  # pylint: disable=import-error,no-name-in-module
 else:
     from urllib import urlretrieve  # pylint: disable=import-error,no-name-in-module
-
-
 
 mem = Memory("./mycache")
 
@@ -142,7 +142,7 @@ def get_synthetic_regression(num_rows=None):
     """
     if num_rows is None:
         num_rows = 10000000
-    return datasets.make_regression(n_samples=num_rows, bias=100, noise=1.0)
+    return datasets.make_regression(n_samples=num_rows, bias=100, noise=1.0, random_state=0)
 
 
 get_year_url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/00203/YearPredictionMSD.txt.zip'  # pylint: disable=line-too-long
@@ -214,4 +214,29 @@ def get_url(num_rows=None):
         X = X[0:num_rows]
         y = y[0:num_rows]
 
+    return X, y
+
+
+@mem.cache
+def get_bosch(num_rows=None):
+    """
+    Bosch Production Line Performance data set (
+    https://www.kaggle.com/c/bosch-production-line-performance)
+
+    Requires Kaggle API and API token (https://github.com/Kaggle/kaggle-api)
+
+    Contains missing values as NaN.
+
+    - Dimensions: 1.184M rows, 968 columns
+    - Task: Binary classification
+
+    :param num_rows:
+    :return: X,y
+    """
+    os.system("kaggle competitions download -c bosch-production-line-performance -f "
+              "train_numeric.csv.zip -p .")
+    X = pd.read_csv("train_numeric.csv.zip", index_col=0, compression='zip', dtype=np.float32,
+                    nrows=num_rows)
+    y = X.iloc[:, -1]
+    X.drop(X.columns[-1], axis=1, inplace=True)
     return X, y

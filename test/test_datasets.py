@@ -1,5 +1,6 @@
 import sys
-
+import os
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
 import datasets
 
 if sys.version_info[0] >= 3:
@@ -52,3 +53,7 @@ def test_get_year():
 
 def test_get_url():
     assert url_is_alive(datasets.get_url_url)
+
+
+def test_bosch():
+    assert url_is_alive("https://www.kaggle.com/c/bosch-production-line-performance")

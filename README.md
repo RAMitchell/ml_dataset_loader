@@ -62,7 +62,8 @@ Memoized version of get_airline(num_rows=None)
 
 Airline dataset (http://kt.ijs.si/elena_ikonomovska/data.html)
 
-Has categorical columns converted to ordinal and target variable "Arrival Delay" converted to binary target.
+Has categorical columns converted to ordinal and target variable "Arrival Delay" converted
+to binary target.
 
 - Dimensions: 115M rows, 13 columns.
 - Task: Binary classification
@@ -150,6 +151,26 @@ Extremely sparse classification dataset. X is returned as a scipy sparse matrix.
 
 - Dimensions: 2396130 rows, 3231961 columns.
 - Task: Classification
+
+:param num_rows:
+:return: X,y
+
+<h2 id="datasets.get_bosch">get_bosch</h2>
+
+```python
+get_bosch(num_rows=None)
+```
+Memoized version of get_bosch(num_rows=None)
+
+Bosch Production Line Performance data set (
+https://www.kaggle.com/c/bosch-production-line-performance)
+
+Requires Kaggle API and API token (https://github.com/Kaggle/kaggle-api)
+
+Contains missing values as NaN.
+
+- Dimensions: 1.184M rows, 968 columns
+- Task: Binary classification
 
 :param num_rows:
 :return: X,y
