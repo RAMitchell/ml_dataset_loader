@@ -24,6 +24,10 @@ def url_is_alive(url):
         return False
 
 
+def test_get_airline():
+    assert url_is_alive(datasets.get_airline_url)
+
+
 def test_get_higgs():
     assert url_is_alive(datasets.get_higgs_url)
 

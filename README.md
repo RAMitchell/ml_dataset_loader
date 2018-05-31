@@ -1,5 +1,5 @@
 # ml_dataset_loader
-[![Build Status](https://travis-ci.org/RAMitchell/ml-dataset-loader.svg?branch=master)](https://travis-ci.org/RAMitchell/ml-dataset-loader)
+[![Build Status](https://travis-ci.org/RAMitchell/ml_dataset_loader.svg?branch=master)](https://travis-ci.org/RAMitchell/ml_dataset_loader)
 
 Provides streamlined python functions for loading machine learning datasets. Functions provided
 typically (but not strictly) return a preprocessed dataset in the sklearn standard form of X,y.
@@ -53,6 +53,23 @@ sh update_readme_documentation.sh
 <h1 id="datasets">datasets</h1>
 
 Module for loading preprocessed datasets for machine learning problems
+<h2 id="datasets.get_airline">get_airline</h2>
+
+```python
+get_airline(num_rows=None)
+```
+Memoized version of get_airline(num_rows=None)
+
+Airline dataset (http://kt.ijs.si/elena_ikonomovska/data.html)
+
+Has categorical columns converted to ordinal and target variable "Arrival Delay" converted to binary target.
+
+- Dimensions: 115M rows, 13 columns.
+- Task: Binary classification
+
+:param num_rows:
+:return: X, y
+
 <h2 id="datasets.get_higgs">get_higgs</h2>
 
 ```python

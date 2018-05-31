@@ -5,18 +5,72 @@ import shutil
 import sys
 import tarfile
 import zipfile
-
 import numpy as np
 import pandas as pd
 from sklearn import datasets
 from sklearn.externals.joblib.memory import Memory
-
 if sys.version_info[0] >= 3:
     from urllib.request import urlretrieve  # pylint: disable=import-error,no-name-in-module
 else:
     from urllib import urlretrieve  # pylint: disable=import-error,no-name-in-module
 
+
+
 mem = Memory("./mycache")
+
+get_airline_url = 'http://kt.ijs.si/elena_ikonomovska/datasets/airline/airline_14col.data.bz2'
+
+
+@mem.cache
+def get_airline(num_rows=None):
+    """
+    Airline dataset (http://kt.ijs.si/elena_ikonomovska/data.html)
+
+    Has categorical columns converted to ordinal and target variable "Arrival Delay" converted
+    to binary target.
+
+    - Dimensions: 115M rows, 13 columns.
+    - Task: Binary classification
+
+    :param num_rows:
+    :return: X, y
+    """
+    filename = 'airline_14col.data.bz2'
+    if not os.path.isfile(filename):
+        urlretrieve(get_airline_url, filename)
+
+    cols = [
+        "Year", "Month", "DayofMonth", "DayofWeek", "CRSDepTime",
+        "CRSArrTime", "UniqueCarrier", "FlightNum", "ActualElapsedTime",
+        "Origin", "Dest", "Distance", "Diverted", "ArrDelay"
+    ]
+
+    # load the data as int16
+    dtype = np.int16
+
+    dtype_columns = {
+        "Year": dtype, "Month": dtype, "DayofMonth": dtype, "DayofWeek": dtype,
+        "CRSDepTime": dtype, "CRSArrTime": dtype, "FlightNum": dtype,
+        "ActualElapsedTime": dtype, "Distance":
+            dtype,
+        "Diverted": dtype, "ArrDelay": dtype,
+    }
+
+    df = pd.read_csv(filename,
+                     names=cols, dtype=dtype_columns, nrows=num_rows)
+
+    # Encode categoricals as numeric
+    for col in df.select_dtypes(['object']).columns:
+        df[col] = df[col].astype("category").cat.codes
+
+    # Turn into binary classification problem
+    df["ArrDelayBinary"] = 1 * (df["ArrDelay"] > 0)
+
+    X = df[df.columns.difference(["ArrDelay", "ArrDelayBinary"])]
+    y = df["ArrDelayBinary"]
+
+    del df
+    return X, y
 
 
 get_higgs_url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/00280/HIGGS.csv.gz'  # pylint: disable=line-too-long
