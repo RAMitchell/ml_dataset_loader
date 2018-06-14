@@ -1,10 +1,7 @@
 """Module for loading preprocessed datasets for machine learning problems"""
-import gzip
 import os
-import shutil
 import sys
 import tarfile
-import zipfile
 
 import numpy as np
 import pandas as pd
@@ -88,18 +85,12 @@ def get_higgs(num_rows=None):
     :param num_rows:
     :return: X, y
     """
-    filename = 'HIGGS.csv'
+    filename = 'HIGGS.csv.gz'
     if not os.path.isfile(filename):
-        urlretrieve(get_higgs_url, filename + '.gz')
-        with gzip.open(filename + '.gz', 'rb') as f_in:
-            with open(filename, 'wb') as f_out:
-                shutil.copyfileobj(f_in, f_out)
-    higgs = pd.read_csv(filename)
+        urlretrieve(get_higgs_url, filename)
+    higgs = pd.read_csv(filename, nrows=num_rows)
     X = higgs.iloc[:, 1:].values
     y = higgs.iloc[:, 0].values
-    if num_rows is not None:
-        X = X[0:num_rows]
-        y = y[0:num_rows]
 
     return X, y
 
@@ -160,20 +151,13 @@ def get_year(num_rows=None):
     :param num_rows:
     :return: X,y
     """
-    filename = 'YearPredictionMSD.txt'
+    filename = 'YearPredictionMSD.txt.zip'
     if not os.path.isfile(filename):
-        urlretrieve(get_year_url, filename + '.zip')
-        zip_ref = zipfile.ZipFile(filename + '.zip', 'r')
-        zip_ref.extractall()
-        zip_ref.close()
+        urlretrieve(get_year_url, filename)
 
-    year = pd.read_csv('YearPredictionMSD.txt', header=None)
+    year = pd.read_csv(filename, header=None, nrows=num_rows)
     X = year.iloc[:, 1:].values
     y = year.iloc[:, 0].values
-    if num_rows is not None:
-        X = X[0:num_rows]
-        y = y[0:num_rows]
-
     return X, y
 
 
