@@ -1,5 +1,6 @@
 import sys
 import os
+
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 import datasets
 
@@ -43,6 +44,13 @@ def test_cover_type():
 def test_get_synthetic_regression():
     n = 10
     X, y = datasets.get_synthetic_regression(n)
+    assert X.shape[0] == n
+    assert y.shape[0] == n
+
+
+def test_get_synthetic_classification():
+    n = 10
+    X, y = datasets.get_synthetic_classification(n)
     assert X.shape[0] == n
     assert y.shape[0] == n
 

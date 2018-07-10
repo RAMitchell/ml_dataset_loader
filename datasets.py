@@ -120,6 +120,24 @@ def get_cover_type(num_rows=None):
 
 
 @mem.cache
+def get_synthetic_classification(num_rows=None):
+    """
+    Synthetic classification generator from sklearn (
+    http://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_classification.html).
+
+    - Dimensions: 10000000 rows, 100 columns.
+    - Task: Binary classification
+
+    :param num_rows:
+    :return: X, y
+    """
+    if num_rows is None:
+        num_rows = 10000000
+
+    return datasets.make_classification(n_samples=num_rows, random_state=0)
+
+
+@mem.cache
 def get_synthetic_regression(num_rows=None):
     """
     Synthetic regression generator from sklearn (
@@ -133,6 +151,7 @@ def get_synthetic_regression(num_rows=None):
     """
     if num_rows is None:
         num_rows = 10000000
+
     return datasets.make_regression(n_samples=num_rows, bias=100, noise=1.0, random_state=0)
 
 
