@@ -243,3 +243,69 @@ def get_bosch(num_rows=None):
     y = X.iloc[:, -1]
     X.drop(X.columns[-1], axis=1, inplace=True)
     return X, y
+
+
+get_adult_train_url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data'  # pylint: disable=line-too-long
+get_adult_test_url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.test'  # pylint: disable=line-too-long
+
+
+@mem.cache
+def get_adult(num_rows=None):
+    """
+    Adult dataset from UCI repository (
+    https://archive.ics.uci.edu/ml/datasets/Adult)
+    Concatenates the test set to the end of the train set.
+    Categoricals are one hot encoded.
+
+    - Dimensions: 48842 rows, 107 columns.
+    - Task: Classification
+
+    :param num_rows:
+    :return: X,y
+    """
+    train_filename = 'adult.data'
+    test_filename = 'adult.test'
+    if not os.path.isfile(train_filename):
+        urlretrieve(get_adult_train_url, train_filename)
+
+    if not os.path.isfile(test_filename):
+        urlretrieve(get_adult_test_url, test_filename)
+
+    adult = pd.read_csv(train_filename, header=None)
+    adult = adult.append(pd.read_csv(test_filename, header=None, skiprows=1))
+    y = np.where(adult.iloc[:, -1] == ' >50K', 1, 0)
+    adult.drop(adult.columns[-1], axis=1, inplace=True)
+    adult = pd.get_dummies(adult)
+    X = adult.iloc[:, :-1].values
+    if num_rows is not None:
+        X = X[:num_rows]
+        y = y[:num_rows]
+
+    return X, y
+
+
+get_wine_quality_url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv'  # pylint: disable=line-too-long
+
+
+@mem.cache
+def get_wine_quality(num_rows=None):
+    """
+    Wine Quality dataset from UCI repository (
+    https://archive.ics.uci.edu/ml/datasets/Wine+Quality
+    Using the white wine data set, not the red.
+
+    - Dimensions: 4898 rows, 12 columns.
+    - Task: Regression
+
+    :param num_rows:
+    :return: X,y
+    """
+    filename = 'winequality-white.csv'
+    if not os.path.isfile(filename):
+        urlretrieve(get_wine_quality_url, filename)
+
+    wine = pd.read_csv(filename, header=0, nrows=num_rows, delimiter=";")
+
+    X = wine.iloc[:, :-1].values
+    y = wine.iloc[:, -1].values
+    return X, y

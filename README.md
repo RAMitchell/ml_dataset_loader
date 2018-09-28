@@ -105,6 +105,22 @@ y contains 7 unique class labels from 1 to 7 inclusive.
 :param num_rows:
 :return: X, y
 
+<h2 id="datasets.get_synthetic_classification">get_synthetic_classification</h2>
+
+```python
+get_synthetic_classification(num_rows=None)
+```
+Memoized version of get_synthetic_classification(num_rows=None)
+
+Synthetic classification generator from sklearn (
+http://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_classification.html).
+
+- Dimensions: 10000000 rows, 100 columns.
+- Task: Binary classification
+
+:param num_rows:
+:return: X, y
+
 <h2 id="datasets.get_synthetic_regression">get_synthetic_regression</h2>
 
 ```python
@@ -171,6 +187,41 @@ Contains missing values as NaN.
 
 - Dimensions: 1.184M rows, 968 columns
 - Task: Binary classification
+
+:param num_rows:
+:return: X,y
+
+<h2 id="datasets.get_adult">get_adult</h2>
+
+```python
+get_adult(num_rows=None)
+```
+Memoized version of get_adult(num_rows=None)
+
+Adult dataset from UCI repository (
+https://archive.ics.uci.edu/ml/datasets/Adult)
+Concatenates the test set to the end of the train set.
+Categoricals are one hot encoded.
+
+- Dimensions: 48842 rows, 107 columns.
+- Task: Classification
+
+:param num_rows:
+:return: X,y
+
+<h2 id="datasets.get_wine_quality">get_wine_quality</h2>
+
+```python
+get_wine_quality(num_rows=None)
+```
+Memoized version of get_wine_quality(num_rows=None)
+
+Wine Quality dataset from UCI repository (
+https://archive.ics.uci.edu/ml/datasets/Wine+Quality
+Using the white wine data set, not the red.
+
+- Dimensions: 4898 rows, 12 columns.
+- Task: Regression
 
 :param num_rows:
 :return: X,y

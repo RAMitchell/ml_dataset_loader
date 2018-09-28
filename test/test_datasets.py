@@ -65,3 +65,12 @@ def test_get_url():
 
 def test_bosch():
     assert url_is_alive("https://www.kaggle.com/c/bosch-production-line-performance")
+
+
+def test_get_adult():
+    assert url_is_alive(datasets.get_adult_train_url)
+    assert url_is_alive(datasets.get_adult_test_url)
+
+
+def test_get_wine_quality():
+    assert url_is_alive(datasets.get_wine_quality_url)
