@@ -74,3 +74,7 @@ def test_get_adult():
 
 def test_get_wine_quality():
     assert url_is_alive(datasets.get_wine_quality_url)
+
+
+def test_get_oshumed():
+    assert url_is_alive(datasets.get_oshumed_url)

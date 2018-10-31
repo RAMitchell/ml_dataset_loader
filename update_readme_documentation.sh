@@ -1,6 +1,6 @@
 #!/bin/sh
 
-pydocmd simple datasets+ > doc.md
+python -m pydocmd simple datasets+ > doc.md
 
 doc_start="\[comment\]: # (Begin generated documentation)"
 doc_end="\[comment\]: # (End generated documentation)"

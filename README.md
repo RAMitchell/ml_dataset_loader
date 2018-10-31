@@ -226,4 +226,20 @@ Using the white wine data set, not the red.
 :param num_rows:
 :return: X,y
 
+<h2 id="datasets.get_oshumed">get_oshumed</h2>
+
+```python
+get_oshumed(num_rows=None)
+```
+Memoized version of get_oshumed(num_rows=None)
+
+OHSUMED ranking dataset from LETOR 3.0
+https://www.microsoft.com/en-us/research/project/letor-learning-rank-information-retrieval/
+
+- Dimensions: 16140 rows, 45 columns.
+- Task: Ranking
+
+:param num_rows:
+:return: X,y,query_ids
+
 [comment]: # (End generated documentation)

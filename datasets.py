@@ -109,9 +109,7 @@ def get_cover_type(num_rows=None):
     :param num_rows:
     :return: X, y
     """
-    data = datasets.fetch_covtype()
-    X = data.data
-    y = data.target
+    X, y = datasets.fetch_covtype(return_X_y=True)
     if num_rows is not None:
         X = X[0:num_rows]
         y = y[0:num_rows]
@@ -309,3 +307,36 @@ def get_wine_quality(num_rows=None):
     X = wine.iloc[:, :-1].values
     y = wine.iloc[:, -1].values
     return X, y
+
+
+get_oshumed_url = 'https://drive.google.com/uc?export=download&id=1h_r1vyJaudJba5ha096_HQiXpJmyTJbx'  # pylint: disable=line-too-long
+
+
+@mem.cache
+def get_oshumed(num_rows=None):
+    """
+    OHSUMED ranking dataset from LETOR 3.0
+    https://www.microsoft.com/en-us/research/project/letor-learning-rank-information-retrieval/
+
+    - Dimensions: 16140 rows, 45 columns.
+    - Task: Ranking
+
+    :param num_rows:
+    :return: X,y,query_ids
+    """
+    filename = 'OHSUMED.txt'
+    if not os.path.isfile(filename):
+        urlretrieve(get_oshumed_url, "OHSUMED.zip")
+        import zipfile
+        with zipfile.ZipFile("OHSUMED.zip") as z:
+            with open(filename, 'wb') as f:
+                f.write(z.read("OHSUMED/Feature-min/ALL/" + filename))
+
+    from sklearn.datasets import load_svmlight_file
+    X, y, qid = load_svmlight_file("OHSUMED.txt", query_id=True)  # pylint: disable=unbalanced-tuple-unpacking
+    if num_rows is not None:
+        X = X[:num_rows]
+        y = y[:num_rows]
+        qid = qid[:num_rows]
+
+    return X, y, qid
