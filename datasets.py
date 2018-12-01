@@ -1,4 +1,5 @@
 """Module for loading preprocessed datasets for machine learning problems"""
+from __future__ import print_function
 import os
 import sys
 import tarfile
@@ -13,7 +14,8 @@ if sys.version_info[0] >= 3:
 else:
     from urllib import urlretrieve  # pylint: disable=import-error,no-name-in-module
 
-mem = Memory("./mycache")
+cache_directory = "./mycache"
+mem = Memory(cache_directory)
 
 get_airline_url = 'http://kt.ijs.si/elena_ikonomovska/datasets/airline/airline_14col.data.bz2'
 
@@ -70,7 +72,7 @@ def get_airline(num_rows=None):
     return X, y
 
 
-get_higgs_url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/00280/HIGGS.csv.gz'  # pylint: disable=line-too-long
+get_higgs_url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/00280/HIGGS.csv.gz'
 
 
 @mem.cache
@@ -109,7 +111,7 @@ def get_cover_type(num_rows=None):
     :param num_rows:
     :return: X, y
     """
-    X, y = datasets.fetch_covtype(return_X_y=True)
+    X, y = datasets.fetch_covtype(return_X_y=True)  # pylint: disable=unexpected-keyword-arg
     if num_rows is not None:
         X = X[0:num_rows]
         y = y[0:num_rows]
@@ -153,7 +155,8 @@ def get_synthetic_regression(num_rows=None):
     return datasets.make_regression(n_samples=num_rows, bias=100, noise=1.0, random_state=0)
 
 
-get_year_url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/00203/YearPredictionMSD.txt.zip'  # pylint: disable=line-too-long
+get_year_url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/00203/YearPredictionMSD' \
+               '.txt.zip'
 
 
 @mem.cache
@@ -178,7 +181,7 @@ def get_year(num_rows=None):
     return X, y
 
 
-get_url_url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/url/url_svmlight.tar.gz'  # pylint: disable=line-too-long
+get_url_url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/url/url_svmlight.tar.gz'
 
 
 @mem.cache
@@ -243,8 +246,9 @@ def get_bosch(num_rows=None):
     return X, y
 
 
-get_adult_train_url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data'  # pylint: disable=line-too-long
-get_adult_test_url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.test'  # pylint: disable=line-too-long
+get_adult_train_url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data' \
+                      ''
+get_adult_test_url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.test'
 
 
 @mem.cache
@@ -282,7 +286,8 @@ def get_adult(num_rows=None):
     return X, y
 
 
-get_wine_quality_url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv'  # pylint: disable=line-too-long
+get_wine_quality_url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality' \
+                       '/winequality-white.csv'
 
 
 @mem.cache
@@ -309,7 +314,8 @@ def get_wine_quality(num_rows=None):
     return X, y
 
 
-get_oshumed_url = 'https://drive.google.com/uc?export=download&id=1h_r1vyJaudJba5ha096_HQiXpJmyTJbx'  # pylint: disable=line-too-long
+get_oshumed_url = 'https://drive.google.com/uc?export=download&id' \
+                  '=1h_r1vyJaudJba5ha096_HQiXpJmyTJbx'
 
 
 @mem.cache
@@ -333,10 +339,73 @@ def get_oshumed(num_rows=None):
                 f.write(z.read("OHSUMED/Feature-min/ALL/" + filename))
 
     from sklearn.datasets import load_svmlight_file
-    X, y, qid = load_svmlight_file("OHSUMED.txt", query_id=True)  # pylint: disable=unbalanced-tuple-unpacking
+    X, y, qid = load_svmlight_file("OHSUMED.txt",  # pylint: disable=unbalanced-tuple-unpacking
+                                   query_id=True)
     if num_rows is not None:
         X = X[:num_rows]
         y = y[:num_rows]
         qid = qid[:num_rows]
 
     return X, y, qid
+
+
+get_epsilon_train_url = 'https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/binary' \
+                        '/epsilon_normalized.bz2'
+get_epsilon_test_url = 'https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/binary' \
+                       '/epsilon_normalized.t.bz2'
+
+
+def get_epsilon(num_rows=None):
+    """
+    Epsilon dataset
+    Source: https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/binary.html
+    Yuan, G. X., Ho, C. H., & Lin, C. J. (2012). An improved glmnet for l1-regularized logistic
+    regression.
+    Journal of Machine Learning Research, 13(Jun), 1999-2030.
+
+    Note: This dataset contains an existing test/train split where scaling factors are calculated
+    on the training and
+    applied to both the training set and the tests set. The first 400K rows are from the training
+    set and the last 100K
+    rows are from the test set.
+
+    - Dimensions: 500K rows, 2K columns.
+    - Task: Classification
+
+    :param num_rows:
+    :return: X,y
+    """
+    import pickle
+    cache_filename = cache_directory + "/epsilon{}.pickle".format(num_rows)
+    try:
+        print("Attempting to load epsilon from cache with num_rows={}".format(num_rows))
+        X, y = pickle.load(open(cache_filename, "rb"))
+        print("Succeeded.")
+
+    except IOError:
+        print("Failed, loading manually.")
+        train_filename = 'epsilon_normalized.bz2'
+        test_filename = 'epsilon_normalized.t.bz2'
+        if not os.path.isfile(train_filename):
+            urlretrieve(get_epsilon_train_url, train_filename)
+        if not os.path.isfile(test_filename):
+            urlretrieve(get_epsilon_test_url, test_filename)
+
+        from sklearn.datasets import load_svmlight_file
+        X, y = load_svmlight_file(train_filename, # pylint: disable=unbalanced-tuple-unpacking
+                                  dtype=np.float32)
+        X = X.toarray()
+        X_test, y_test = load_svmlight_file(test_filename, # pylint: disable=unbalanced-tuple-unpacking
+                                            dtype=np.float32)
+        X_test = X_test.toarray()
+        X = np.vstack((X, X_test))
+        y = np.append(y, y_test)
+        if num_rows is not None:
+            X = X[:num_rows]
+            y = y[:num_rows]
+
+        y[y <= 0] = 0
+
+        pickle.dump((X, y), open(cache_filename, "wb"), protocol=4)
+
+    return X, y

@@ -78,3 +78,8 @@ def test_get_wine_quality():
 
 def test_get_oshumed():
     assert url_is_alive(datasets.get_oshumed_url)
+
+
+def test_get_epsilon():
+    assert url_is_alive(datasets.get_epsilon_train_url)
+    assert url_is_alive(datasets.get_epsilon_test_url)

@@ -50,11 +50,9 @@ sh update_readme_documentation.sh
 ```
 # Documentation
 [comment]: # (Begin generated documentation)
-<h1 id="datasets">datasets</h1>
-
+# datasets
 Module for loading preprocessed datasets for machine learning problems
-<h2 id="datasets.get_airline">get_airline</h2>
-
+## get_airline
 ```python
 get_airline(num_rows=None)
 ```
@@ -71,8 +69,7 @@ to binary target.
 :param num_rows:
 :return: X, y
 
-<h2 id="datasets.get_higgs">get_higgs</h2>
-
+## get_higgs
 ```python
 get_higgs(num_rows=None)
 ```
@@ -87,8 +84,7 @@ https://archive.ics.uci.edu/ml/datasets/HIGGS).
 :param num_rows:
 :return: X, y
 
-<h2 id="datasets.get_cover_type">get_cover_type</h2>
-
+## get_cover_type
 ```python
 get_cover_type(num_rows=None)
 ```
@@ -105,8 +101,7 @@ y contains 7 unique class labels from 1 to 7 inclusive.
 :param num_rows:
 :return: X, y
 
-<h2 id="datasets.get_synthetic_classification">get_synthetic_classification</h2>
-
+## get_synthetic_classification
 ```python
 get_synthetic_classification(num_rows=None)
 ```
@@ -121,8 +116,7 @@ http://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_classific
 :param num_rows:
 :return: X, y
 
-<h2 id="datasets.get_synthetic_regression">get_synthetic_regression</h2>
-
+## get_synthetic_regression
 ```python
 get_synthetic_regression(num_rows=None)
 ```
@@ -137,8 +131,7 @@ http://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_regressio
 :param num_rows:
 :return: X, y
 
-<h2 id="datasets.get_year">get_year</h2>
-
+## get_year
 ```python
 get_year(num_rows=None)
 ```
@@ -153,8 +146,7 @@ https://archive.ics.uci.edu/ml/datasets/yearpredictionmsd)
 :param num_rows:
 :return: X,y
 
-<h2 id="datasets.get_url">get_url</h2>
-
+## get_url
 ```python
 get_url(num_rows=None)
 ```
@@ -171,8 +163,7 @@ Extremely sparse classification dataset. X is returned as a scipy sparse matrix.
 :param num_rows:
 :return: X,y
 
-<h2 id="datasets.get_bosch">get_bosch</h2>
-
+## get_bosch
 ```python
 get_bosch(num_rows=None)
 ```
@@ -191,8 +182,7 @@ Contains missing values as NaN.
 :param num_rows:
 :return: X,y
 
-<h2 id="datasets.get_adult">get_adult</h2>
-
+## get_adult
 ```python
 get_adult(num_rows=None)
 ```
@@ -209,8 +199,7 @@ Categoricals are one hot encoded.
 :param num_rows:
 :return: X,y
 
-<h2 id="datasets.get_wine_quality">get_wine_quality</h2>
-
+## get_wine_quality
 ```python
 get_wine_quality(num_rows=None)
 ```
@@ -226,8 +215,7 @@ Using the white wine data set, not the red.
 :param num_rows:
 :return: X,y
 
-<h2 id="datasets.get_oshumed">get_oshumed</h2>
-
+## get_oshumed
 ```python
 get_oshumed(num_rows=None)
 ```
@@ -241,5 +229,25 @@ https://www.microsoft.com/en-us/research/project/letor-learning-rank-information
 
 :param num_rows:
 :return: X,y,query_ids
+
+## get_epsilon
+```python
+get_epsilon(num_rows=None)
+```
+
+Epsilon dataset
+Source: https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/binary.html
+Yuan, G. X., Ho, C. H., & Lin, C. J. (2012). An improved glmnet for l1-regularized logistic regression.
+Journal of Machine Learning Research, 13(Jun), 1999-2030.
+
+Note: This dataset contains an existing test/train split where scaling factors are calculated on the training and
+applied to both the training set and the tests set. The first 400K rows are from the training set and the last 100K
+rows are from the test set.
+
+- Dimensions: 500K rows, 2K columns.
+- Task: Classification
+
+:param num_rows:
+:return: X,y
 
 [comment]: # (End generated documentation)
